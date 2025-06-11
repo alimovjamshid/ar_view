@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D AR Viewer</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      model-viewer {
+        width: 100%;
+        height: 100vh;
+        background-color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <model-viewer
+      id="viewer"
+      alt="3D model"
+      ar
+      ar-modes="scene-viewer quick-look webxr"
+      camera-controls
+      auto-rotate
+      ios-src=""
+      src=""
+    >
+      <button slot="ar-button" style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); padding: 12px 24px; font-size: 16px;">AR bilan ko‘rish</button>
+    </model-viewer>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const modelUrl = params.get('model');
+
+      if (modelUrl) {
+        const viewer = document.getElementById('viewer');
+        viewer.src = modelUrl;
+
+        // iOS uchun usdz avtomatik sozlash (agar .glb bo‘lsa)
+        if (modelUrl.endsWith('.glb')) {
+          viewer.iosSrc = modelUrl.replace('.glb', '.usdz');
+        }
+      } else {
+        alert("Model linki URL'da 'model=' parametri sifatida berilmagan.");
+      }
+    </script>
+  </body>
+</html>
