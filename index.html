@@ -4,37 +4,19 @@
   <meta charset="UTF-8">
   <title>USDZ AR Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 2rem; }
-    input, button { font-size: 1rem; padding: 0.5rem; width: 80%; max-width: 500px; margin-top: 1rem; }
-    a#arLink { display: inline-block; margin-top: 2rem; }
-    img#arPreview { width: 200px; border: 1px solid #ccc; }
-  </style>
 </head>
 <body>
-  <h1>View USDZ in AR</h1>
-  <input type="text" id="modelUrl" placeholder="Enter HTTPS USDZ URL" value="https://panel.mebelbor.app/storage/photo_iso/Cozy_Elegance_0610123203_texture.usdz">
-  <br>
-  <button onclick="loadAR()">Load USDZ</button>
-
-  <div id="viewer" style="display:none;">
-    <a id="arLink" rel="ar" target="_blank">
-      <img id="arPreview" src="" alt="View in AR">
-    </a>
-    <p>Tap the image to open in AR (iOS Safari only)</p>
-  </div>
+  <a id="arLink" rel="ar" target="_blank">
+    <img id="arPreview" src="" alt="View in AR">
+  </a>
 
   <script>
-    function loadAR() {
-      const url = document.getElementById("modelUrl").value.trim();
+    const url = new URLSearchParams(window.location.search).get("url");
+    const link = document.getElementById("arLink");
+    const img = document.getElementById("arPreview");
 
-      const link = document.getElementById("arLink");
-      const img = document.getElementById("arPreview");
-
-      link.href = url;
-      img.src = url; // This doesn't actually preview, but is required for AR trigger
-      document.getElementById("viewer").style.display = "block";
-    }
+    link.href = url;
+    img.src = url; // This doesn't actually preview, but is required for AR trigger
   </script>
 </body>
 </html>
