@@ -4,19 +4,35 @@
   <meta charset="UTF-8">
   <title>USDZ AR Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 2rem; }
+    a#arLink { display: inline-block; }
+    img#arPreview { width: 200px; border: 1px solid #ccc; }
+  </style>
 </head>
 <body>
-  <a id="arLink" rel="ar" target="_blank">
-    <img id="arPreview" src="" alt="View in AR">
-  </a>
+  <div id="viewer" style="display:none;">
+    <a id="arLink" rel="ar" target="_blank">
+      <img id="arPreview" src="" alt="View in AR">
+    </a>
+  </div>
 
   <script>
-    const url = new URLSearchParams(window.location.search).get("url");
-    const link = document.getElementById("arLink");
-    const img = document.getElementById("arPreview");
+    function loadAR() {
+      const params = new URLSearchParams(window.location.search);
+      const url = params.get('usdzUrl');
 
-    link.href = url;
-    img.src = url; // This doesn't actually preview, but is required for AR trigger
+      if (url) {
+        const link = document.getElementById("arLink");
+        const img = document.getElementById("arPreview");
+
+        link.href = url;
+        img.src = url; // Required for AR trigger
+        document.getElementById("viewer").style.display = "block";
+      }
+    }
+
+    window.onload = loadAR;
   </script>
 </body>
 </html>
