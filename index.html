@@ -2,23 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AR Quick Look</title>
+  <title>USDZ AR Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    a#arLink {
+      display: inline-block;
+    }
+    img#arPreview {
+      width: 200px;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+    }
+  </style>
 </head>
 <body>
+  <div id="viewer" style="display:none;">
+    <a id="arLink" rel="ar" target="_blank">
+      <img id="arPreview" src="" alt="View in AR">
+    </a>
+    <p>.usdz format</p>
+  </div>
+
   <script>
-    window.onload = function () {
+    function loadAR() {
       const params = new URLSearchParams(window.location.search);
-      const modelUrl = params.get('model');
-      if (modelUrl) {
-        const a = document.createElement('a');
-        a.setAttribute('rel', 'ar');
-        a.setAttribute('href', modelUrl);
-        a.click();
-      } else {
-        document.body.innerHTML = "<h3>No model provided!</h3>";
+      const url = params.get('model');
+
+      if (url) {
+        const link = document.getElementById("arLink");
+        const img = document.getElementById("arPreview");
+
+        link.href = url;
+        img.src = url; // still acts as preview, triggers AR on click
+        document.getElementById("viewer").style.display = "block";
       }
-    };
+    }
+
+    window.onload = loadAR;
   </script>
 </body>
 </html>
