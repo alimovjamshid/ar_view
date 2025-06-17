@@ -2,51 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AR USDZ Viewer</title>
+  <title>AR Model Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google Model Viewer kutubxonasi -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 2rem;
+      background-color: #f9f9f9;
     }
 
-    a[rel="ar"] {
-      display: inline-block;
-      width: 200px;
-      height: 200px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #ccc;
-    }
-
-    a[rel="ar"] img {
+    model-viewer {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 320px;
+      height: 320px;
+    }
+
+    #arButton {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 10px 20px;
+      background-color: #6200ee;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <h2>AR Preview</h2>
 
-  <a id="arLink" rel="ar" target="_blank">
-    <img id="preview" src="" alt="AR Preview">
-  </a>
+  <model-viewer id="viewer"
+    src=""
+    auto-rotate
+    camera-controls
+    ar
+    ar-modes="scene-viewer quick-look webxr"
+    ios-src=""
+    alt="3D model">
+  </model-viewer>
+
+  <button id="arButton">View in AR</button>
 
   <script>
-    window.onload = function () {
+    function loadModel() {
       const params = new URLSearchParams(window.location.search);
-      const modelUrl = params.get("model");
+      const usdzUrl = params.get('model');     // iOS uchun .usdz
+      const glbUrl = params.get('preview');    // preview uchun .glb
 
-      if (modelUrl) {
-        const link = document.getElementById("arLink");
-        const preview = document.getElementById("preview");
+      const viewer = document.getElementById("viewer");
+      const arButton = document.getElementById("arButton");
 
-        // Set both the AR trigger and preview image to .usdz
-        link.href = modelUrl;
-        preview.src = modelUrl;
-      }
+      if (glbUrl) viewer.src = glbUrl;
+      if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
+
+      arButton.addEventListener("click", () => {
+        // iOS uchun AR Quick Look trigger qiladi
+        viewer.activateAR();
+      });
     }
+
+    window.onload = loadModel;
   </script>
 </body>
 </html>
