@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>USDZ AR Viewer</title>
+  <title>AR USDZ Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -10,41 +10,43 @@
       text-align: center;
       padding: 2rem;
     }
-    a#arLink {
+
+    a[rel="ar"] {
       display: inline-block;
-    }
-    img#arPreview {
       width: 200px;
-      height: auto;
-      border: 1px solid #ccc;
+      height: 200px;
       border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #ccc;
+    }
+
+    a[rel="ar"] img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
-  <div id="viewer" style="display:none;">
-    <a id="arLink" rel="ar" target="_blank">
-      <img id="arPreview" src="" alt="View in AR">
-    </a>
-    <p>.usdz format</p>
-  </div>
+
+  <a id="arLink" rel="ar" target="_blank">
+    <img id="preview" src="" alt="AR Preview">
+  </a>
 
   <script>
-    function loadAR() {
+    window.onload = function () {
       const params = new URLSearchParams(window.location.search);
-      const url = params.get('model');
+      const modelUrl = params.get("model");
 
-      if (url) {
+      if (modelUrl) {
         const link = document.getElementById("arLink");
-        const img = document.getElementById("arPreview");
+        const preview = document.getElementById("preview");
 
-        link.href = url;
-        img.src = url; // still acts as preview, triggers AR on click
-        document.getElementById("viewer").style.display = "block";
+        // Set both the AR trigger and preview image to .usdz
+        link.href = modelUrl;
+        preview.src = modelUrl;
       }
     }
-
-    window.onload = loadAR;
   </script>
 </body>
 </html>
