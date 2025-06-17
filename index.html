@@ -4,35 +4,22 @@
   <meta charset="UTF-8">
   <title>USDZ AR Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 2rem; }
-    a#arLink { display: inline-block; }
-    img#arPreview { width: 200px; border: 1px solid #ccc; }
-  </style>
 </head>
 <body>
-  <div id="viewer" style="display:none;">
-    <a id="arLink" rel="ar" target="_blank">
-      <img id="arPreview" src="" alt="View in AR">
-    </a>
-  </div>
-
   <script>
-    function loadAR() {
+    function openAR() {
       const params = new URLSearchParams(window.location.search);
-      const url = params.get('model');
+      const modelUrl = params.get('model');
 
-      if (url) {
-        const link = document.getElementById("arLink");
-        const img = document.getElementById("arPreview");
-
-        link.href = url;
-        img.src = url; // Required for AR trigger
-        document.getElementById("viewer").style.display = "block";
+      if (modelUrl) {
+        // iOS uchun Safari orqali AR Quick Look ochish
+        window.location.href = modelUrl;
+      } else {
+        document.body.innerHTML = '<h2>No model URL provided</h2>';
       }
     }
 
-    window.onload = loadAR;
+    window.onload = openAR;
   </script>
 </body>
 </html>
