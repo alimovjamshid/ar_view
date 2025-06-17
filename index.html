@@ -2,24 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>USDZ AR Viewer</title>
+  <title>AR Quick Look</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <script>
-    function openAR() {
+    window.onload = function () {
       const params = new URLSearchParams(window.location.search);
       const modelUrl = params.get('model');
-
       if (modelUrl) {
-        // iOS uchun Safari orqali AR Quick Look ochish
-        window.location.href = modelUrl;
+        const a = document.createElement('a');
+        a.setAttribute('rel', 'ar');
+        a.setAttribute('href', modelUrl);
+        a.click();
       } else {
-        document.body.innerHTML = '<h2>No model URL provided</h2>';
+        document.body.innerHTML = "<h3>No model provided!</h3>";
       }
-    }
-
-    window.onload = openAR;
+    };
   </script>
 </body>
 </html>
