@@ -1,80 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AR Model Viewer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Google Model Viewer kutubxonasi -->
+  <meta charset="UTF-8" />
+  <title>AR Auto Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
       text-align: center;
       padding: 2rem;
-      background-color: #f9f9f9;
     }
 
     model-viewer {
       width: 100%;
-      max-width: 320px;
-      height: 320px;
+      max-width: 360px;
+      height: 360px;
       margin: auto;
     }
 
-    #arButton {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 10px 20px;
-      background-color: #6200ee;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
+
   <h2>AR Preview</h2>
 
-  <!-- 3D Model ko'rinadigan joy -->
-  <model-viewer id="viewer"
+  <!-- Faqat iOS bo‘lmaganlarda 3D preview ko‘rsatiladi -->
+  <model-viewer
+    id="viewer"
+    class="hidden"
     src=""
+    ios-src=""
+    alt="3D Model"
     auto-rotate
     camera-controls
     ar
-    ar-modes="scene-viewer quick-look webxr"
-    ios-src=""
-    alt="3D model">
+    ar-modes="scene-viewer quick-look webxr">
   </model-viewer>
 
-  <button id="arButton">View in AR</button>
-
   <script>
-    function loadModel() {
-      const params = new URLSearchParams(window.location.search);
-      const glbUrl = params.get('preview');
-      const usdzUrl = params.get('model');
-      
-      const viewer = document.getElementById("viewer");
-      const arButton = document.getElementById("arButton");
-
-      // Agar URL'dan kelmasa, default model yuklanadi
-      const defaultGlb = "https://modelviewer.dev/shared-assets/models/Astronaut.glb";
-      const defaultUsdz = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz";
-
-      viewer.src = glbUrl || defaultGlb;
-      viewer.setAttribute("ios-src", usdzUrl || defaultUsdz);
-
-      // AR tugmasi bosilganda
-      arButton.addEventListener("click", () => {
-        viewer.activateAR();
-      });
+    function isIOS() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     }
 
-    window.onload = loadModel;
+    function openQuickLook(usdzUrl) {
+      const anchor = document.createElement('a');
+      anchor.setAttribute('rel', 'ar');
+      anchor.setAttribute('href', usdzUrl);
+      anchor.click();
+    }
+
+    function loadAR() {
+      const params = new URLSearchParams(window.location.search);
+      const glbUrl = params.get("preview") || "https://modelviewer.dev/shared-assets/models/Astronaut.glb";
+      const usdzUrl = params.get("model") || "https://modelviewer.dev/shared-assets/models/Astronaut.usdz";
+
+      const viewer = document.getElementById("viewer");
+
+      // iOS foydalanuvchilarda avtomatik AR rejimga o‘tamiz
+      if (isIOS()) {
+        setTimeout(() => {
+          openQuickLook(usdzUrl);
+        }, 500);
+      } else {
+        // Android va desktop: GLB preview ko‘rsatiladi
+        viewer.src = glbUrl;
+        viewer.setAttribute("ios-src", usdzUrl);
+        viewer.classList.remove("hidden");
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadAR);
   </script>
 </body>
 </html>
