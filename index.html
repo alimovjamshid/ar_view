@@ -1,38 +1,75 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>AR View</title>
-    <script>
-      function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent);
-      }
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AR Model Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      function isAndroid() {
-        return /Android/.test(navigator.userAgent);
-      }
+  <!-- Google Model Viewer kutubxonasi -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
-      window.onload = function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const usdzModel = urlParams.get("model");
-        const glbModel = urlParams.get("preview");
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
 
-        if (isIOS() && usdzModel) {
-          window.location.href = usdzModel + "#quicklook";
-        } else if (isAndroid() && glbModel) {
-          const sceneViewerUrl =
-            "intent://arvr.google.com/scene-viewer/1.0?file=" +
-            encodeURIComponent(glbModel) +
-            "&mode=ar_preferred#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.google.ar.core;end;";
-          window.location.href = sceneViewerUrl;
-        } else {
-          document.body.innerHTML =
-            "<h3 style='text-align:center;'>AR qurilmangiz qo‘llab-quvvatlanmaydi</h3>";
-        }
-      };
-    </script>
-  </head>
-  <body>
-    <p style="text-align:center;">AR model yuklanmoqda...</p>
-  </body>
+    model-viewer {
+      width: 100%;
+      max-width: 320px;
+      height: 320px;
+    }
+
+    #arButton {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 10px 20px;
+      background-color: #6200ee;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>AR Preview</h2>
+
+  <!-- 3D modelni ko'rsatish -->
+  <model-viewer id="viewer"
+    src=""
+    ios-src=""
+    alt="3D model"
+    auto-rotate
+    camera-controls
+    ar
+    ar-modes="scene-viewer quick-look webxr">
+  </model-viewer>
+
+  <!-- iOS uchun AR tugmasi -->
+  <button id="arButton">View in AR</button>
+
+  <script>
+    function loadModel() {
+      const params = new URLSearchParams(window.location.search);
+      const usdzUrl = params.get('model');     // iOS uchun .usdz
+      const glbUrl = params.get('preview');    // Android yoki preview uchun .glb
+
+      const viewer = document.getElementById("viewer");
+      const arButton = document.getElementById("arButton");
+
+      if (glbUrl) viewer.setAttribute("src", glbUrl);
+      if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
+
+      arButton.addEventListener("click", () => {
+        viewer.activateAR();
+      });
+    }
+
+    window.onload = loadModel;
+  </script>
+</body>
 </html>
