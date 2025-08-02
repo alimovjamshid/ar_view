@@ -20,6 +20,7 @@
       width: 100%;
       max-width: 320px;
       height: 320px;
+      margin: auto;
     }
 
     #arButton {
@@ -38,6 +39,7 @@
 <body>
   <h2>AR Preview</h2>
 
+  <!-- 3D Model ko'rinadigan joy -->
   <model-viewer id="viewer"
     src=""
     auto-rotate
@@ -53,17 +55,21 @@
   <script>
     function loadModel() {
       const params = new URLSearchParams(window.location.search);
-      const usdzUrl = params.get('model');     // iOS uchun .usdz
-      const glbUrl = params.get('preview');    // preview uchun .glb
-
+      const glbUrl = params.get('preview');
+      const usdzUrl = params.get('model');
+      
       const viewer = document.getElementById("viewer");
       const arButton = document.getElementById("arButton");
 
-      if (glbUrl) viewer.src = glbUrl;
-      if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
+      // Agar URL'dan kelmasa, default model yuklanadi
+      const defaultGlb = "https://modelviewer.dev/shared-assets/models/Astronaut.glb";
+      const defaultUsdz = "https://modelviewer.dev/shared-assets/models/Astronaut.usdz";
 
+      viewer.src = glbUrl || defaultGlb;
+      viewer.setAttribute("ios-src", usdzUrl || defaultUsdz);
+
+      // AR tugmasi bosilganda
       arButton.addEventListener("click", () => {
-        // iOS uchun AR Quick Look trigger qiladi
         viewer.activateAR();
       });
     }
