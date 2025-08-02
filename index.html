@@ -2,38 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AR Auto Launch</title>
+  <title>AR Model Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google Model Viewer kutubxonasi -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+
+    model-viewer {
+      width: 100%;
+      max-width: 320px;
+      height: 320px;
+    }
+
+    #arButton {
+      display: none; /* Tugma ko‘rinmaydi */
+    }
+  </style>
 </head>
 <body>
+  <h2>AR Preview</h2>
+
+  <model-viewer id="viewer"
+    src=""
+    auto-rotate
+    camera-controls
+    ar
+    ar-modes="scene-viewer quick-look webxr"
+    ios-src=""
+    alt="3D model">
+  </model-viewer>
+
+  <button id="arButton">View in AR</button>
+
   <script>
-    window.onload = function () {
+    function loadModel() {
       const params = new URLSearchParams(window.location.search);
-      const usdzUrl = params.get('model'); // iOS uchun .usdz fayl
-      const glbUrl = params.get('preview'); // Android uchun preview (.glb)
+      const usdzUrl = params.get('model');     // iOS uchun .usdz
+      const glbUrl = params.get('preview');    // preview uchun .glb
 
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const viewer = document.getElementById("viewer");
 
-      if (isIOS && usdzUrl) {
-        // iOS foydalanuvchilar uchun to'g'ridan-to'g'ri usdz faylga redirect
-        window.location.href = usdzUrl;
-      } else {
-        // Android yoki boshqa brauzerlar uchun oddiy model-viewer sahifasi
-        document.body.innerHTML = `
-          <h2>AR Preview (Android)</h2>
-          <model-viewer
-            src="${glbUrl || ''}"
-            alt="3D model"
-            auto-rotate
-            camera-controls
-            ar
-            ar-modes="scene-viewer webxr"
-            style="width: 100%; height: 400px;">
-          </model-viewer>
-          <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-        `;
-      }
-    };
+      if (glbUrl) viewer.src = glbUrl;
+      if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
+
+      // Avtomatik AR ni ishga tushurish (0.1s delay bilan)
+      setTimeout(() => {
+        viewer.activateAR();
+      }, 100);
+    }
+
+    window.onload = loadModel;
   </script>
 </body>
 </html>
