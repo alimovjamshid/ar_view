@@ -2,52 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AR Viewer</title>
+  <title>AR Model Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google Model Viewer kutubxonasi -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    model-viewer {
+      width: 0;
+      height: 0;
+      visibility: hidden;
+    }
+  </style>
 </head>
 <body>
-  <model-viewer
-    id="arViewer"
+
+  <model-viewer id="viewer"
     src=""
-    ios-src=""
-    alt="AR Model"
-    auto-rotate
-    camera-controls
     ar
     ar-modes="scene-viewer quick-look webxr"
-    style="width: 0; height: 0; visibility: hidden;">
+    ios-src=""
+    alt="3D model">
   </model-viewer>
 
   <script>
-    function isIOS() {
-      return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    }
-
-    function isAndroid() {
-      return /Android/.test(navigator.userAgent);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
+    function loadAndAutoLaunchAR() {
       const params = new URLSearchParams(window.location.search);
-      const usdzUrl = params.get('model');     // iOS .usdz file
-      const glbUrl = params.get('preview');    // Android .glb file
+      const usdzUrl = params.get('model');     // iOS uchun .usdz
+      const glbUrl = params.get('preview');    // Android uchun .glb
 
-      const viewer = document.getElementById('arViewer');
+      const viewer = document.getElementById("viewer");
 
-      if (isIOS() && usdzUrl) {
-        // iOS - redirect to Quick Look directly
-        window.location.href = usdzUrl;
-      } else if (isAndroid() && glbUrl) {
-        // Android - show model-viewer and open AR automatically
-        viewer.setAttribute('src', glbUrl);
-        viewer.addEventListener('load', () => {
-          viewer.activateAR();
-        });
-      } else {
-        document.body.innerHTML = "<h3>Platform not supported or model URL missing.</h3>";
-      }
-    });
+      if (glbUrl) viewer.src = glbUrl;
+      if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
+
+      // DOM yuklangach AR ni ishga tushirish
+      viewer.addEventListener('load', () => {
+        viewer.activateAR();
+      });
+    }
+
+    window.onload = loadAndAutoLaunchAR;
   </script>
+
 </body>
 </html>
