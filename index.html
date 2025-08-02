@@ -1,45 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>AR Auto Viewer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>AR Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      text-align: center;
-      padding: 2rem;
-    }
-
-    model-viewer {
-      width: 100%;
-      max-width: 360px;
-      height: 360px;
-      margin: auto;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
 </head>
 <body>
-
-  <h2>AR Preview</h2>
-
-  <!-- Faqat iOS bo‘lmaganlarda 3D preview ko‘rsatiladi -->
   <model-viewer
-    id="viewer"
-    class="hidden"
+    id="arViewer"
     src=""
     ios-src=""
-    alt="3D Model"
+    alt="AR Model"
     auto-rotate
     camera-controls
     ar
-    ar-modes="scene-viewer quick-look webxr">
+    ar-modes="scene-viewer quick-look webxr"
+    style="width: 0; height: 0; visibility: hidden;">
   </model-viewer>
 
   <script>
@@ -47,34 +24,30 @@
       return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     }
 
-    function openQuickLook(usdzUrl) {
-      const anchor = document.createElement('a');
-      anchor.setAttribute('rel', 'ar');
-      anchor.setAttribute('href', usdzUrl);
-      anchor.click();
+    function isAndroid() {
+      return /Android/.test(navigator.userAgent);
     }
 
-    function loadAR() {
+    window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
-      const glbUrl = params.get("preview") || "https://modelviewer.dev/shared-assets/models/Astronaut.glb";
-      const usdzUrl = params.get("model") || "https://modelviewer.dev/shared-assets/models/Astronaut.usdz";
+      const usdzUrl = params.get('model');     // iOS .usdz file
+      const glbUrl = params.get('preview');    // Android .glb file
 
-      const viewer = document.getElementById("viewer");
+      const viewer = document.getElementById('arViewer');
 
-      // iOS foydalanuvchilarda avtomatik AR rejimga o‘tamiz
-      if (isIOS()) {
-        setTimeout(() => {
-          openQuickLook(usdzUrl);
-        }, 500);
+      if (isIOS() && usdzUrl) {
+        // iOS - redirect to Quick Look directly
+        window.location.href = usdzUrl;
+      } else if (isAndroid() && glbUrl) {
+        // Android - show model-viewer and open AR automatically
+        viewer.setAttribute('src', glbUrl);
+        viewer.addEventListener('load', () => {
+          viewer.activateAR();
+        });
       } else {
-        // Android va desktop: GLB preview ko‘rsatiladi
-        viewer.src = glbUrl;
-        viewer.setAttribute("ios-src", usdzUrl);
-        viewer.classList.remove("hidden");
+        document.body.innerHTML = "<h3>Platform not supported or model URL missing.</h3>";
       }
-    }
-
-    window.addEventListener("DOMContentLoaded", loadAR);
+    });
   </script>
 </body>
 </html>
