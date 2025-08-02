@@ -1,65 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>AR Model Viewer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AR View</title>
+    <script>
+      function isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+      }
 
-  <!-- Google Model Viewer kutubxonasi -->
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+      function isAndroid() {
+        return /Android/.test(navigator.userAgent);
+      }
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 2rem;
-      background-color: #f9f9f9;
-    }
+      window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const usdzModel = urlParams.get("model");
+        const glbModel = urlParams.get("preview");
 
-    model-viewer {
-      width: 100%;
-      max-width: 320px;
-      height: 320px;
-    }
-
-    #arButton {
-      display: none; /* Tugma ko‘rinmaydi */
-    }
-  </style>
-</head>
-<body>
-  <h2>AR Preview</h2>
-
-  <model-viewer id="viewer"
-    src=""
-    auto-rotate
-    camera-controls
-    ar
-    ar-modes="scene-viewer quick-look webxr"
-    ios-src=""
-    alt="3D model">
-  </model-viewer>
-
-  <button id="arButton">View in AR</button>
-
-  <script>
-    function loadModel() {
-      const params = new URLSearchParams(window.location.search);
-      const usdzUrl = params.get('model');     // iOS uchun .usdz
-      const glbUrl = params.get('preview');    // preview uchun .glb
-
-      const viewer = document.getElementById("viewer");
-
-      if (glbUrl) viewer.src = glbUrl;
-      if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
-
-      // Avtomatik AR ni ishga tushurish (0.1s delay bilan)
-      setTimeout(() => {
-        viewer.activateAR();
-      }, 100);
-    }
-
-    window.onload = loadModel;
-  </script>
-</body>
+        if (isIOS() && usdzModel) {
+          window.location.href = usdzModel + "#quicklook";
+        } else if (isAndroid() && glbModel) {
+          const sceneViewerUrl =
+            "intent://arvr.google.com/scene-viewer/1.0?file=" +
+            encodeURIComponent(glbModel) +
+            "&mode=ar_preferred#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.google.ar.core;end;";
+          window.location.href = sceneViewerUrl;
+        } else {
+          document.body.innerHTML =
+            "<h3 style='text-align:center;'>AR qurilmangiz qo‘llab-quvvatlanmaydi</h3>";
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <p style="text-align:center;">AR model yuklanmoqda...</p>
+  </body>
 </html>
