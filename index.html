@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>AR Model Viewer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Google Model Viewer kutubxonasi -->
+  <!-- Model Viewer kutubxonasi -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
   <style>
@@ -18,8 +18,9 @@
 
     model-viewer {
       width: 100%;
-      max-width: 320px;
-      height: 320px;
+      max-width: 400px;
+      height: 400px;
+      margin: auto;
     }
 
     #arButton {
@@ -38,31 +39,36 @@
 <body>
   <h2>AR Preview</h2>
 
-  <!-- 3D modelni ko'rsatish -->
+  <!-- 3D ko‘rinish uchun model-viewer -->
   <model-viewer id="viewer"
     src=""
     ios-src=""
-    alt="3D model"
+    ar
+    ar-modes="scene-viewer quick-look webxr"
     auto-rotate
     camera-controls
-    ar
-    ar-modes="scene-viewer quick-look webxr">
+    alt="3D model">
   </model-viewer>
 
-  <!-- iOS uchun AR tugmasi -->
+  <!-- AR tugmasi -->
   <button id="arButton">View in AR</button>
 
   <script>
     function loadModel() {
       const params = new URLSearchParams(window.location.search);
-      const usdzUrl = params.get('model');     // iOS uchun .usdz
-      const glbUrl = params.get('preview');    // Android yoki preview uchun .glb
+      const usdzUrl = params.get('model');   // iOS uchun .usdz
+      const glbUrl = params.get('preview');  // Preview uchun .glb
 
       const viewer = document.getElementById("viewer");
       const arButton = document.getElementById("arButton");
 
-      if (glbUrl) viewer.setAttribute("src", glbUrl);
-      if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
+      if (glbUrl) {
+        viewer.src = glbUrl;
+      }
+
+      if (usdzUrl) {
+        viewer.setAttribute("ios-src", usdzUrl);
+      }
 
       arButton.addEventListener("click", () => {
         viewer.activateAR();
