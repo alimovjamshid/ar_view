@@ -2,12 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Uyingizda mebelni 3d korish</title>
+  <title>Uyingizda mebelni 3D ko‘rish</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Model Viewer kutubxonasi -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -38,10 +35,8 @@
 </head>
 <body>
 
-  <!-- AR tugmasi yuqorida bo‘ladi -->
   <button id="arButton">Ko'rishni boshlash</button>
 
-  <!-- 3D model -->
   <model-viewer id="viewer"
     src=""
     ios-src=""
@@ -52,20 +47,21 @@
     alt="3D model">
   </model-viewer>
 
-  <!-- Matn pastda bo‘ladi -->
   <h2>Uyingizda mebelni 3D ko‘rish</h2>
 
   <script>
     function loadModel() {
       const params = new URLSearchParams(window.location.search);
-      const usdzUrl = params.get('model');   // iOS uchun .usdz
-      const glbUrl = params.get('preview');  // Preview uchun .glb
+      const usdzUrl = params.get('model');
+      const glbUrl = params.get('preview');
 
       const viewer = document.getElementById("viewer");
       const arButton = document.getElementById("arButton");
 
       if (glbUrl) {
-        viewer.src = glbUrl;
+        viewer.setAttribute("src", glbUrl);
+      } else {
+        alert("preview parametri yo'q!");
       }
 
       if (usdzUrl) {
