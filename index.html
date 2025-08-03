@@ -48,8 +48,10 @@
     alt="3D model"
     ar
     ar-modes="scene-viewer quick-look webxr"
+    environment-image="neutral"
     camera-controls
     auto-rotate
+    touch-action="pan-y"
     background-color="#ffffff">
   </model-viewer>
 
@@ -58,7 +60,7 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const glbUrl = params.get('preview'); // Misol: ?preview=https://...
+    const glbUrl = params.get('preview'); // Masalan: ?preview=https://...
 
     const viewer = document.getElementById('viewer');
     if (glbUrl) {
