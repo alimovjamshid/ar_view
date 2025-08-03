@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Uyingizda mebelni 3D ko‘rish</title>
+  <title>Uyingizda mebelni 3d korish</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Model Viewer kutubxonasi -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,8 +24,8 @@
     }
 
     #arButton {
-      display: none;
-      margin-top: 1rem;
+      display: inline-block;
+      margin-bottom: 1rem;
       padding: 10px 20px;
       background-color: #FFB823;
       color: #fff;
@@ -34,8 +37,11 @@
   </style>
 </head>
 <body>
-  <h2>Uyingizda mebelni 3D ko‘rish</h2>
 
+  <!-- AR tugmasi yuqorida bo‘ladi -->
+  <button id="arButton">Ko'rishni boshlash</button>
+
+  <!-- 3D model -->
   <model-viewer id="viewer"
     src=""
     ios-src=""
@@ -46,13 +52,10 @@
     alt="3D model">
   </model-viewer>
 
-  <button id="arButton">Ko‘rishni boshlash</button>
+  <!-- Matn pastda bo‘ladi -->
+  <h2>Uyingizda mebelni 3D ko‘rish</h2>
 
   <script>
-    function isIOS() {
-      return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    }
-
     function loadModel() {
       const params = new URLSearchParams(window.location.search);
       const usdzUrl = params.get('model');   // iOS uchun .usdz
@@ -61,15 +64,17 @@
       const viewer = document.getElementById("viewer");
       const arButton = document.getElementById("arButton");
 
-      if (glbUrl) viewer.src = glbUrl;
-      if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
-
-      if (isIOS() && usdzUrl) {
-        arButton.style.display = "inline-block";
-        arButton.addEventListener("click", () => {
-          viewer.activateAR();
-        });
+      if (glbUrl) {
+        viewer.src = glbUrl;
       }
+
+      if (usdzUrl) {
+        viewer.setAttribute("ios-src", usdzUrl);
+      }
+
+      arButton.addEventListener("click", () => {
+        viewer.activateAR();
+      });
     }
 
     window.onload = loadModel;
