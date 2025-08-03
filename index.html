@@ -1,86 +1,76 @@
-https://alimovjamshid.github.io/ar_view/?model=https://panel.mebelbor.app/storage/photo_iso/tripo_convert_41c81288-9b01-4383-9300-f9b3b7b18d1d.usdz&preview=https://panel.mebelbor.app/storage/photo_android/tripo_convert_0ef9622a-d309-4815-847d-d18f7e6475b4.glb
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <title>Uyingizda mebelni 3d korish</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Model Viewer kutubxonasi -->
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
+  <title>3D Mebel Ko‘rish</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <style>
     body {
+      background: #f0f0f0;
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 2rem;
-      background-color: #f9f9f9;
+      padding: 20px;
     }
 
     model-viewer {
       width: 100%;
       max-width: 400px;
       height: 400px;
+      background: white;
       margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
     }
 
-    #arButton {
-      display: inline-block;
-      margin-bottom: 1rem;
-      padding: 10px 20px;
-      background-color: #FFB823;
-      color: #fff;
+    h2 {
+      margin-top: 20px;
+    }
+
+    .ar-button {
+      background-color: #ffc107;
       border: none;
-      border-radius: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
       font-size: 16px;
+      margin-top: 15px;
+      color: black;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <!-- 3D model -->
-  <model-viewer id="viewer"
-    src=""
-    ios-src=""
+  <model-viewer
+    id="viewer"
+    alt="3D Mebel"
     ar
     ar-modes="scene-viewer quick-look webxr"
-    auto-rotate
+    environment-image="neutral"
     camera-controls
-    alt="3D model">
+    auto-rotate
+    touch-action="pan-y">
   </model-viewer>
 
-  <!-- Matn pastda bo‘ladi -->
   <h2>Uyingizda mebelni 3D ko‘rish</h2>
 
-   <!-- AR tugmasi yuqorida bo‘ladi -->
-  <button id="arButton">Ko'rishni boshlash</button>
+  <button class="ar-button" onclick="startAR()">Ko'rishni boshlash</button>
 
   <script>
-    function loadModel() {
-      const params = new URLSearchParams(window.location.search);
-      const usdzUrl = params.get('model');   // iOS uchun .usdz
-      const glbUrl = params.get('preview');  // Preview uchun .glb
+    const params = new URLSearchParams(window.location.search);
+    const glbUrl = params.get('preview');
+    const usdzUrl = params.get('model');
 
-      const viewer = document.getElementById("viewer");
-      const arButton = document.getElementById("arButton");
+    const viewer = document.getElementById("viewer");
 
-      if (glbUrl) {
-        viewer.src = glbUrl;
-      }
+    if (glbUrl) viewer.setAttribute("src", glbUrl);
+    if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
 
-      if (usdzUrl) {
-        viewer.setAttribute("ios-src", usdzUrl);
-      }
-
-      arButton.addEventListener("click", () => {
-        viewer.activateAR();
-      });
+    function startAR() {
+      viewer.activateAR();
     }
-
-    window.onload = loadModel;
   </script>
+
 </body>
 </html>
