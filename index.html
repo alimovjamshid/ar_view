@@ -46,7 +46,7 @@
     id="viewer"
     alt="3D Mebel"
     ar
-    ar-modes="scene-viewer quick-look webxr"
+    ar-modes="quick-look" <!-- faqat iOS uchun AR -->
     environment-image="neutral"
     camera-controls
     auto-rotate
@@ -59,16 +59,16 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const glbUrl = params.get('preview');
-    const usdzUrl = params.get('model');
+    const glbUrl = params.get('preview'); // 3D ko‘rish uchun
+    const usdzUrl = params.get('model');  // iOS AR uchun
 
     const viewer = document.getElementById("viewer");
 
-    if (glbUrl) viewer.setAttribute("src", glbUrl);
-    if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
+    if (glbUrl) viewer.setAttribute("src", glbUrl);      // preview uchun
+    if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl); // iOS AR uchun
 
     function startAR() {
-      viewer.activateAR();
+      viewer.activateAR(); // faqat iOS bo‘lsa ishlaydi
     }
   </script>
 
