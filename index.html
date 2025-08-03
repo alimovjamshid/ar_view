@@ -7,7 +7,7 @@
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <style>
     body {
-      background: #f0f0f0;
+      background: #f8f9fa;
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
@@ -17,25 +17,26 @@
       width: 100%;
       max-width: 400px;
       height: 400px;
-      background: white;
       margin: auto;
-      border-radius: 10px;
+      border-radius: 12px;
+      background-color: #ffffff;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
     }
 
     h2 {
       margin-top: 20px;
+      font-size: 22px;
+      color: #333;
     }
 
     .ar-button {
-      background-color: #ffc107;
-      border: none;
+      margin-top: 16px;
       padding: 12px 24px;
-      border-radius: 10px;
-      font-size: 16px;
-      margin-top: 15px;
+      background-color: #ffc107;
       color: black;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
     }
   </style>
@@ -44,31 +45,28 @@
 
   <model-viewer
     id="viewer"
-    alt="3D Mebel"
+    alt="3D model"
     ar
-    ar-modes="scene-viewer quick-look webxr" <!-- faqat iOS uchun AR -->
-    environment-image="neutral"
+    ar-modes="scene-viewer quick-look webxr"
     camera-controls
     auto-rotate
-    touch-action="pan-y">
+    background-color="#ffffff">
   </model-viewer>
 
-  <h2>Uyingizda mebelni 3D ko‘rish</h2>
-
-  <button class="ar-button" onclick="startAR()">Ko'rishni boshlash</button>
+  <h2>3D Mebelni Ko‘rish</h2>
+  <button class="ar-button" onclick="startAR()">Ko‘rishni boshlash</button>
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const glbUrl = params.get('preview'); // 3D ko‘rish uchun
-    const usdzUrl = params.get('model');  // iOS AR uchun
+    const glbUrl = params.get('preview'); // Misol: ?preview=https://...
 
-    const viewer = document.getElementById("viewer");
-
-    if (glbUrl) viewer.setAttribute("src", glbUrl);      // preview uchun
-    if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl); // iOS AR uchun
+    const viewer = document.getElementById('viewer');
+    if (glbUrl) {
+      viewer.setAttribute('src', glbUrl);
+    }
 
     function startAR() {
-      viewer.activateAR(); // faqat iOS bo‘lsa ishlaydi
+      viewer.activateAR();
     }
   </script>
 
