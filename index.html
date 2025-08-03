@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Uyingizda mebelni 3D ko‘rish</title>
+  <title>Uyingizda mebelni 3d korish</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Google model-viewer kutubxonasi -->
+  <!-- Model Viewer kutubxonasi -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
   <style>
@@ -38,31 +38,28 @@
 </head>
 <body>
 
-  <!-- AR tugmasi -->
+  <!-- AR tugmasi yuqorida bo‘ladi -->
   <button id="arButton">Ko'rishni boshlash</button>
 
-  <!-- 3D Model ko‘rinishi -->
+  <!-- 3D model -->
   <model-viewer id="viewer"
     src=""
     ios-src=""
-    alt="3D model"
     ar
     ar-modes="scene-viewer quick-look webxr"
     auto-rotate
     camera-controls
-    environment-image="neutral"
-    touch-action="pan-y"
-    background-color="#ffffff">
+    alt="3D model">
   </model-viewer>
 
-  <!-- Sarlavha -->
+  <!-- Matn pastda bo‘ladi -->
   <h2>Uyingizda mebelni 3D ko‘rish</h2>
 
   <script>
     function loadModel() {
       const params = new URLSearchParams(window.location.search);
       const usdzUrl = params.get('model');   // iOS uchun .usdz
-      const glbUrl = params.get('preview');  // Android/web uchun .glb
+      const glbUrl = params.get('preview');  // Preview uchun .glb
 
       const viewer = document.getElementById("viewer");
       const arButton = document.getElementById("arButton");
@@ -75,7 +72,6 @@
         viewer.setAttribute("ios-src", usdzUrl);
       }
 
-      // AR tugmasi bosilganda AR holatini ishga tushirish
       arButton.addEventListener("click", () => {
         viewer.activateAR();
       });
