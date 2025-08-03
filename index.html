@@ -50,25 +50,24 @@
   <!-- Matn pastda -->
   <h2>Uyingizda mebelni 3D ko‘rish</h2>
 
-  <script>
+<script>
+  window.onload = () => {
     const params = new URLSearchParams(window.location.search);
     const glbUrl = params.get('preview');
     const usdzUrl = params.get('model');
 
     const viewer = document.getElementById("viewer");
+    const arButton = document.getElementById("arButton");
 
-    if (glbUrl) {
-      viewer.src = glbUrl;
-    }
+    if (glbUrl) viewer.setAttribute("src", glbUrl);
+    if (usdzUrl) viewer.setAttribute("ios-src", usdzUrl);
 
-    if (usdzUrl) {
-      viewer.setAttribute("ios-src", usdzUrl);
-    }
+    // Simulate click after 2 seconds
+    setTimeout(() => {
+      arButton.click(); // this may NOT work unless triggered by real user interaction
+    }, 2000);
+  };
+</script>
 
-    // AR ni model-viewer bosilganda ishga tushirish
-    viewer.addEventListener("click", () => {
-      viewer.activateAR();
-    });
-  </script>
 </body>
 </html>
